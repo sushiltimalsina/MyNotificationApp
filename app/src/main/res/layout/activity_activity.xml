@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="30dp"
+    android:background="@color/background">
+
+    <!-- Header -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/screen_horizontal"
+        android:paddingEnd="@dimen/screen_horizontal">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:minWidth="0dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="12dp"
+            android:text="‹  Back"
+            android:textAllCaps="false"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/body_text" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/activity"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/title_text"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Section header -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/screen_horizontal"
+        android:paddingEnd="@dimen/screen_horizontal"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/recent_activity"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/section_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/transactionCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/small_text" />
+
+    </LinearLayout>
+
+    <!-- Empty state -->
+
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_activity"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/section_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/no_activity_description"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/small_text" />
+
+    </LinearLayout>
+
+    <!-- Transaction list -->
+
+    <ScrollView
+        android:id="@+id/activityScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/transactionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/screen_horizontal"
+            android:paddingEnd="@dimen/screen_horizontal"
+            android:paddingBottom="24dp" />
+
+    </ScrollView>
+
+</LinearLayout>

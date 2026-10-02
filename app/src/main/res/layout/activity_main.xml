@@ -1,10 +1,431 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:background="@color/background">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/screen_horizontal"
+            android:paddingTop="@dimen/screen_vertical"
+            android:paddingEnd="@dimen/screen_horizontal"
+            android:paddingBottom="20dp">
+
+            <!-- Header -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wallet_speaker"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/title_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/tagline"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/small_text" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/settingsButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/settings"
+                    android:src="@android:drawable/ic_menu_preferences" />
+
+            </LinearLayout>
+
+            <!-- Service status -->
+
+            <LinearLayout
+                android:id="@+id/statusCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_status"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <View
+                    android:id="@+id/statusDot"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bg_primary_button" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/serviceStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/active"
+                        android:textColor="@color/success"
+                        android:textSize="@dimen/body_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/serviceDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/ready_to_announce"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/tiny_text" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Wallets -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/wallets_section"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/section_text"
+                android:textStyle="bold" />
+
+            <!-- eSewa -->
+
+            <LinearLayout
+                android:id="@+id/esewaCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/esewa"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/section_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/esewaOwner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/not_configured"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/small_text" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/esewaStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/connected"
+                    android:textColor="@color/success"
+                    android:textSize="@dimen/small_text"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Khalti -->
+
+            <LinearLayout
+                android:id="@+id/khaltiCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/khalti"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/section_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/khaltiOwner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/not_configured"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/small_text" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/khaltiStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/connected"
+                    android:textColor="@color/success"
+                    android:textSize="@dimen/small_text"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Recent activity -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/recent_activity"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/section_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/viewActivity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:text="@string/view_activity"
+                    android:textColor="@color/primary"
+                    android:textSize="@dimen/small_text"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Dynamic transactions -->
+
+            <LinearLayout
+                android:id="@+id/recentActivityContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
+
+            <!-- Empty activity -->
+
+            <LinearLayout
+                android:id="@+id/emptyActivityCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_activity"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/body_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:text="@string/no_activity_description"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/tiny_text" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Bottom navigation -->
+
+    <!-- Bottom navigation -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@color/surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
+
+        <!-- Home -->
+
+        <LinearLayout
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/home"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/home"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/bottom_nav_text"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Wallets -->
+
+        <LinearLayout
+            android:id="@+id/navWallets"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/wallets"
+                android:src="@drawable/ic_wallet" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/wallets"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/bottom_nav_text" />
+
+        </LinearLayout>
+
+        <!-- Activity -->
+
+        <LinearLayout
+            android:id="@+id/navActivity"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/activity"
+                android:src="@drawable/ic_activity" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/activity"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/bottom_nav_text" />
+
+        </LinearLayout>
+
+        <!-- Settings -->
+
+        <LinearLayout
+            android:id="@+id/navSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/settings"
+                android:src="@drawable/ic_settings" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/settings"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/bottom_nav_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
