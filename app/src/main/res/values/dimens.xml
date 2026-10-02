@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="screen_horizontal">20dp</dimen>
+    <dimen name="screen_vertical">60dp</dimen>
+
+    <dimen name="title_text">26sp</dimen>
+    <dimen name="section_text">17sp</dimen>
+    <dimen name="body_text">16sp</dimen>
+    <dimen name="small_text">14sp</dimen>
+    <dimen name="tiny_text">12sp</dimen>
+
+    <dimen name="card_radius">16dp</dimen>
+    <dimen name="card_padding">18dp</dimen>
+
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_large">20dp</dimen>
+    <dimen name="bottom_nav_text">14sp</dimen>
+
+</resources>
