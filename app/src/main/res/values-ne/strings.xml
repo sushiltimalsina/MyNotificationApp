@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Wallet Speaker</string>
+    <string name="home">गृहपृष्ठ</string>
+    <string name="wallets">वालेटहरू</string>
+    <string name="activity">गतिविधि</string>
+    <string name="settings">सेटिङ</string>
+
+    <string name="wallet_speaker">Wallet Speaker</string>
+    <string name="tagline">तपाईंको वालेट, अब बोल्छ</string>
+
+    <string name="active">सक्रिय</string>
+    <string name="ready_to_announce">कारोबार घोषणा गर्न तयार</string>
+    <string name="notification_access">सूचना पहुँच</string>
+    <string name="enabled">सक्रिय</string>
+    <string name="disabled">निष्क्रिय</string>
+
+    <string name="wallets_section">वालेटहरू</string>
+    <string name="recent_activity">हालैका गतिविधि</string>
+
+    <string name="esewa">ईसेवा</string>
+    <string name="khalti">खल्ती</string>
+    <string name="connected">जडान भएको</string>
+    <string name="not_configured">सेटअप गरिएको छैन</string>
+
+    <string name="no_activity">अहिलेसम्म कुनै कारोबार छैन</string>
+    <string name="no_activity_description">तपाईंका वालेट कारोबारका घोषणाहरू यहाँ देखिनेछन्।</string>
+
+    <string name="open_wallets">वालेट व्यवस्थापन गर्नुहोस्</string>
+    <string name="view_activity">गतिविधि हेर्नुहोस्</string>
+    <string name="test_voice">आवाज परीक्षण</string>
+
+    <string name="announcements">घोषणाहरू</string>
+    <string name="notifications">सूचनाहरू</string>
+    <string name="voice">आवाज</string>
+    <string name="appearance">रूप</string>
+    <string name="about">बारेमा</string>
+
+    <string name="received">प्राप्त</string>
+    <string name="sent">भुक्तानी</string>
+    <string name="just_now">भर्खरै</string>
+
+    <string name="wallet_settings_saved">वालेट सेटिङ सुरक्षित गरियो</string>
+    <string name="tts_not_ready">नेपाली आवाज तयार छैन</string>
+
+    <string name="manage_wallets_description">कारोबार घोषणा गर्दा प्रयोग हुने नामहरू सेट गर्नुहोस्।</string>
+    <string name="esewa_wallet_description">ईसेवा कारोबार घोषणा गर्दा प्रयोग हुने नाम सेट गर्नुहोस्।</string>
+    <string name="khalti_wallet_description">खल्ती कारोबार घोषणा गर्दा प्रयोग हुने नाम सेट गर्नुहोस्।</string>
+
+    <string name="owner_name">खाता धनीको नाम</string>
+
+    <string name="test_esewa">ईसेवा घोषणा परीक्षण</string>
+    <string name="test_khalti">खल्ती घोषणा परीक्षण</string>
+
+    <string name="save_wallet_settings">वालेट सेटिङ सुरक्षित गर्नुहोस्</string>
+
+    <string name="announce_received_description">प्राप्त हुने कारोबार घोषणा गर्नुहोस्</string>
+    <string name="announce_sent_description">भुक्तानी हुने कारोबार घोषणा गर्नुहोस्</string>
+
+    <string name="announcement_settings">घोषणा सेटिङ</string>
+    <string name="announcement_settings_description">कुन वालेटका कारोबारहरू ठूलो आवाजमा घोषणा गर्ने छनोट गर्नुहोस्।</string>
+    <string name="received_transactions">प्राप्त हुने कारोबार</string>
+    <string name="sent_transactions">भुक्तानी हुने कारोबार</string>
+    <string name="esewa_announcements">ईसेवा घोषणा</string>
+    <string name="khalti_announcements">खल्ती घोषणा</string>
+    <string name="announcement_enabled">घोषणा सक्रिय</string>
+    <string name="announcement_disabled">घोषणा निष्क्रिय</string>
+    <string name="voice_status">आवाजको स्थिति</string>
+    <string name="checking_voice">नेपाली आवाज जाँच हुँदैछ...</string>
+    <string name="voice_ready">नेपाली आवाज तयार छ</string>
+    <string name="voice_unavailable">नेपाली आवाज उपलब्ध छैन</string>
+    <string name="speech_rate">बोल्ने गति</string>
+    <string name="pitch">आवाजको पिच</string>
+    <string name="normal">सामान्य</string>
+    <string name="notification_access_status">सूचना पहुँचको स्थिति</string>
+    <string name="notification_access_enabled">सूचना पहुँच सक्रिय छ</string>
+    <string name="notification_access_disabled">सूचना पहुँच निष्क्रिय छ</string>
+    <string name="open_notification_settings">सूचना सेटिङ खोल्नुहोस्</string>
+    <string name="silence_other_notifications">अन्य वालेट सूचनाहरू शान्त गर्नुहोस्</string>
+    <string name="silence_other_notifications_description">कारोबार नभएका ईसेवा र खल्ती सूचनाहरू सम्भव भएसम्म हटाउनुहोस्।</string>
+    <string name="notification_limitation">सूचनाको आवाज Android ले नियन्त्रण गर्छ। यो विकल्पले कारोबार नभएका सूचनाहरू हटाउन सक्छ, तर Android ले पहिले नै बजाइसकेको आवाजलाई सधैं रोक्न सक्दैन।</string>
+    <string name="appearance_settings">रूपको सेटिङ</string>
+    <string name="appearance_description">Wallet Speaker कस्तो देखिने छनोट गर्नुहोस्।</string>
+    <string name="theme">थिम</string>
+    <string name="system_default">सिस्टमअनुसार</string>
+    <string name="light">उज्यालो</string>
+    <string name="dark">अँध्यारो</string>
+    <string name="theme_saved">थिम परिवर्तन गरियो</string>
+</resources>
+
+
+
+

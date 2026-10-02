@@ -1,3 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Notification App</string>
+
+    <string name="app_name">Wallet Speaker</string>
+
+    <string name="home">Home</string>
+    <string name="wallets">Wallets</string>
+    <string name="activity">Activity</string>
+    <string name="settings">Settings</string>
+
+    <string name="wallet_speaker">Wallet Speaker</string>
+    <string name="tagline">Your wallet, spoken aloud</string>
+
+    <string name="active">Active</string>
+    <string name="ready_to_announce">Ready to announce transactions</string>
+    <string name="notification_access">Notification Access</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+
+    <string name="wallets_section">WALLETS</string>
+    <string name="recent_activity">RECENT ACTIVITY</string>
+
+    <string name="esewa">eSewa</string>
+    <string name="khalti">Khalti</string>
+    <string name="connected">Connected</string>
+    <string name="not_configured">Not configured</string>
+
+    <string name="no_activity">No transactions yet</string>
+    <string name="no_activity_description">Your wallet announcements will appear here.</string>
+
+    <string name="open_wallets">Manage wallets</string>
+    <string name="view_activity">View activity</string>
+    <string name="test_voice">Test voice</string>
+
+    <string name="announcements">Announcements</string>
+    <string name="notifications">Notifications</string>
+    <string name="voice">Voice</string>
+    <string name="appearance">Appearance</string>
+    <string name="about">About</string>
+
+    <string name="received">Received</string>
+    <string name="sent">Sent</string>
+    <string name="just_now">Just now</string>
+
+    <string name="wallet_settings_saved">Wallet settings saved</string>
+    <string name="tts_not_ready">Nepali voice is not ready</string>
+
+    <string name="manage_wallets_description">Configure the names used in your transaction announcements.</string>
+    <string name="esewa_wallet_description">Set the name to use when announcing eSewa transactions.</string>
+    <string name="khalti_wallet_description">Set the name to use when announcing Khalti transactions.</string>
+
+    <string name="owner_name">Account owner name</string>
+
+    <string name="test_esewa">Test eSewa announcement</string>
+    <string name="test_khalti">Test Khalti announcement</string>
+
+    <string name="save_wallet_settings">Save wallet settings</string>
+
+    <string name="announce_received_description">Speak incoming transactions</string>
+    <string name="announce_sent_description">Speak outgoing transactions</string>
+
+    <string name="announcement_settings">Announcement settings</string>
+    <string name="announcement_settings_description">Choose which wallet transactions should be announced aloud.</string>
+    <string name="received_transactions">Received transactions</string>
+    <string name="sent_transactions">Sent transactions</string>
+    <string name="esewa_announcements">eSewa announcements</string>
+    <string name="khalti_announcements">Khalti announcements</string>
+    <string name="announcement_enabled">Announcement enabled</string>
+    <string name="announcement_disabled">Announcement disabled</string>
+    <string name="voice_status">Voice status</string>
+    <string name="checking_voice">Checking Nepali voice...</string>
+    <string name="voice_ready">Nepali voice is ready</string>
+    <string name="voice_unavailable">Nepali voice is unavailable</string>
+    <string name="speech_rate">Speech rate</string>
+    <string name="pitch">Pitch</string>
+    <string name="normal">Normal</string>
+    <string name="notification_access_status">Notification access status</string>
+    <string name="notification_access_enabled">Notification access is enabled</string>
+    <string name="notification_access_disabled">Notification access is disabled</string>
+    <string name="open_notification_settings">Open notification settings</string>
+    <string name="silence_other_notifications">Silence other wallet notifications</string>
+    <string name="silence_other_notifications_description">Hide non-transaction eSewa and Khalti notifications when possible.</string>
+    <string name="notification_limitation">Android controls notification sounds. This option can remove non-transaction notifications, but it cannot always prevent a sound that Android has already played.</string>
+    <string name="appearance_settings">Appearance settings</string>
+    <string name="appearance_description">Choose how Wallet Speaker looks.</string>
+    <string name="theme">Theme</string>
+    <string name="system_default">System default</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="theme_saved">Theme updated</string>
 </resources>
+
+
+
+
