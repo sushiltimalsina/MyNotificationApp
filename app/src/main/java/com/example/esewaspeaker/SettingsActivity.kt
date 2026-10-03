@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
-class SettingsActivity : AppCompatActivity(){
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -65,6 +65,7 @@ class SettingsActivity : AppCompatActivity(){
                 )
             )
         }
+
         findViewById<Button>(
             R.id.appearanceButton
         ).setOnClickListener {
@@ -72,6 +73,17 @@ class SettingsActivity : AppCompatActivity(){
                 Intent(
                     this,
                     AppearanceActivity::class.java
+                )
+            )
+        }
+
+        findViewById<Button>(
+            R.id.aboutButton
+        ).setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    AboutActivity::class.java
                 )
             )
         }

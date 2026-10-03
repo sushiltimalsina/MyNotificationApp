@@ -67,7 +67,7 @@
     <string name="announcement_enabled">घोषणा सक्रिय</string>
     <string name="announcement_disabled">घोषणा निष्क्रिय</string>
     <string name="voice_status">आवाजको स्थिति</string>
-    <string name="checking_voice">नेपाली आवाज जाँच हुँदैछ...</string>
+    <string name="checking_voice">नेपाली आवाज जाँच हुँदैछ…</string>
     <string name="voice_ready">नेपाली आवाज तयार छ</string>
     <string name="voice_unavailable">नेपाली आवाज उपलब्ध छैन</string>
     <string name="speech_rate">बोल्ने गति</string>
@@ -87,8 +87,36 @@
     <string name="light">उज्यालो</string>
     <string name="dark">अँध्यारो</string>
     <string name="theme_saved">थिम परिवर्तन गरियो</string>
+    <string name="voice_checking">आवाज जाँच हुँदैछ…</string>
+    <string name="voice_checking_details">नेपाली टेक्स्ट-टु-स्पीच आवाज उपलब्ध छ कि छैन जाँच गर्दै।</string>
+    <string name="voice_setup_required">नेपाली टेक्स्ट-टु-स्पीच सेटअप आवश्यक छ।</string>
+    <string name="nepali_tts_required">एन्ड्रोइड टेक्स्ट-टु-स्पीच सेटिङबाट नेपाली आवाज स्थापना वा सक्रिय गर्नुहोस्।</string>
+    <string name="voice_engine_ready">तयार • इन्जिन: %1$s</string>
+    <string name="voice_ready_details">नेपाली टेक्स्ट-टु-स्पीच तयार छ।</string>
+    <string name="open_tts_settings">TTS सेटिङ खोल्नुहोस्</string>
+    <string name="voice_volume_note">आवाजको भोल्युम तपाईंको फोनको मिडिया भोल्युमअनुसार हुन्छ। ठूलो घोषणाका लागि मिडिया भोल्युम बढाउनुहोस्।</string>
+    <string name="how_it_works">Wallet Speaker कसरी काम गर्छ</string>
+    <string name="how_it_works_title">स्वचालित वालेट कारोबार घोषणाहरू</string>
+    <string name="how_it_works_description">Wallet Speaker ले समर्थित ईसेवा र खल्ती सूचनाहरू निगरानी गर्छ र नेपाली टेक्स्ट-टु-स्पीच प्रयोग गरेर पहिचान गरिएका कारोबारहरू घोषणा गर्छ।</string>
+    <string name="how_it_works_points">• एन्ड्रोइडले Wallet Speaker मा सूचना पठाउँदा फोनको स्क्रिन लक हुँदा पनि काम गर्छ।\n• समर्थित प्राप्त र भुक्तानी कारोबारहरू घोषणा गर्छ।\n• प्रचारप्रसार र कारोबार नभएका वालेट सूचनाहरू बेवास्ता गर्छ।\n• कारोबारको आवाज बन्द भए पनि कारोबारहरू रेकर्ड गर्न सकिन्छ।\n• आवाजको गति र पिच सेटिङ्स → आवाजबाट कन्फिगर गर्न सकिन्छ।\n• आवाजको भोल्युम फोनको मिडिया भोल्युमअनुसार हुन्छ।\n• कारोबार पहिचानको लागि सूचना पहुँच सक्षम रहनुपर्छ।</string>
+    <string name="about_wallet_speaker">Wallet Speaker को बारेमा</string>
+    <string name="about_tagline">स्मार्ट वालेट कारोबार आवाज घोषणाकर्ता</string>
+    <string name="about_what_it_does">Wallet Speaker ले के गर्छ</string>
+    <string name="about_what_it_does_text">Wallet Speaker ले समर्थित ईसेवा र खल्ती वालेट कारोबार सूचनाहरू स्वचालित रूपमा पत्ता लगाउँछ र नेपाली टेक्स्ट-टु-स्पीच प्रयोग गरेर घोषणा गर्छ।</string>
+    <string name="about_supported_wallets">समर्थित वालेटहरू</string>
+    <string name="about_supported_wallets_text">• ईसेवा\n• खल्ती</string>
+    <string name="about_features">विशेषताहरू</string>
+    <string name="about_features_text">• प्राप्त र भुक्तानी कारोबार पहिचान\n• नेपालीमा रकम रूपान्तरण\n• उपलब्ध हुँदा प्रेषकको जानकारी\n• कारोबार इतिहास\n• कन्फिगर गर्न मिल्ने आवाजको गति र पिच\n• वालेट कारोबार प्रकारका लागि छुट्टाछुट्टै घोषणा नियन्त्रण\n• एन्ड्रोइडले सूचना पठाउँदा स्क्रिन लक भएको बेला पनि काम गर्ने\n• प्रचारप्रसार र गैर-कारोबार वालेट सूचनाहरू फिल्टर गर्ने</string>
+    <string name="about_voice">आवाज र भाषा</string>
+    <string name="about_voice_text">Wallet Speaker ले नेपाली भाषा समर्थनसहितको तपाईंको उपकरणको टेक्स्ट-टु-स्पीच इन्जिन प्रयोग गर्दछ। आवाजको गति र पिच आवाज सेटिङ पृष्ठबाट समायोजन गर्न सकिन्छ। घोषणा भोल्युम फोनको मिडिया भोल्युमअनुसार हुन्छ।</string>
+    <string name="about_privacy">गोपनीयता</string>
+    <string name="about_privacy_text">Wallet Speaker ले कारोबार पहिचान गर्न, कारोबार इतिहास राख्न र घोषणाहरू उत्पन्न गर्न तपाईंको यन्त्रमा रहेका वालेट सूचना जानकारी प्रयोग गर्छ। यसलाई तपाईंको ईसेवा वा खल्ती पासवर्ड आवश्यक पर्दैन।</string>
+    <string name="about_requirements">महत्त्वपूर्ण</string>
+    <string name="about_requirements_text">Wallet Speaker एन्ड्रोइड सूचना श्रवण पहुँचमा निर्भर गर्दछ। एन्ड्रोइड वा यन्त्र-विशिष्ट ब्याट्री र पृष्ठभूमि प्रतिबन्धहरूले सूचनाहरू एपमा डेलिभर हुन्छन् कि हुँदैनन् भन्ने कुरालाई असर गर्न सक्छ।</string>
+    <string name="about_version">संस्करण १.०.०</string>
+    <string name="about_developer">सुशिल तिमिल्सिनाद्वारा विकसित</string>
+    <string name="about_footer">सरल र सुलभ वालेट कारोबार घोषणाहरूको लागि बनाइएको।</string>
+    <string name="language">भाषा</string>
+    <string name="english">अंग्रेजी (English)</string>
+    <string name="nepali">नेपाली (Nepali)</string>
 </resources>
-
-
-
-

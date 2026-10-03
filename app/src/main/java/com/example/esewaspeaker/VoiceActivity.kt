@@ -1,6 +1,8 @@
 package com.example.esewaspeaker
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.speech.tts.TextToSpeech
 import android.widget.Button
 import android.widget.SeekBar
@@ -12,6 +14,7 @@ class VoiceActivity : AppCompatActivity(),
     TextToSpeech.OnInitListener {
 
     private lateinit var voiceStatus: TextView
+    private lateinit var voiceDetails: TextView
     private lateinit var speechRateValue: TextView
     private lateinit var pitchValue: TextView
     private lateinit var speechRateSeekBar: SeekBar
@@ -37,15 +40,10 @@ class VoiceActivity : AppCompatActivity(),
         )
 
         bindViews()
-
-        tts = TextToSpeech(
-            this,
-            this
-        )
-
         loadSettings()
         setupListeners()
         updateLabels()
+        initializeTts()
     }
 
     private fun bindViews() {
@@ -53,6 +51,11 @@ class VoiceActivity : AppCompatActivity(),
         voiceStatus =
             findViewById(
                 R.id.voiceStatus
+            )
+
+        voiceDetails =
+            findViewById(
+                R.id.voiceDetails
             )
 
         speechRateValue =
@@ -73,6 +76,33 @@ class VoiceActivity : AppCompatActivity(),
         pitchSeekBar =
             findViewById(
                 R.id.pitchSeekBar
+            )
+    }
+
+    private fun initializeTts() {
+
+        ttsReady = false
+
+        voiceStatus.text =
+            getString(
+                R.string.voice_checking
+            )
+
+        voiceStatus.setTextColor(
+            getColor(
+                R.color.text_secondary
+            )
+        )
+
+        voiceDetails.text =
+            getString(
+                R.string.voice_checking_details
+            )
+
+        tts =
+            TextToSpeech(
+                this,
+                this
             )
     }
 
@@ -115,6 +145,12 @@ class VoiceActivity : AppCompatActivity(),
             speakTest()
         }
 
+        findViewById<Button>(
+            R.id.ttsSettingsButton
+        ).setOnClickListener {
+            openTtsSettings()
+        }
+
         speechRateSeekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
 
@@ -123,8 +159,11 @@ class VoiceActivity : AppCompatActivity(),
                     progress: Int,
                     fromUser: Boolean
                 ) {
+
                     val rate =
-                        rateFromProgress(progress)
+                        rateFromProgress(
+                            progress
+                        )
 
                     preferences.edit()
                         .putFloat(
@@ -156,8 +195,11 @@ class VoiceActivity : AppCompatActivity(),
                     progress: Int,
                     fromUser: Boolean
                 ) {
+
                     val pitch =
-                        pitchFromProgress(progress)
+                        pitchFromProgress(
+                            progress
+                        )
 
                     preferences.edit()
                         .putFloat(
@@ -185,6 +227,7 @@ class VoiceActivity : AppCompatActivity(),
     private fun rateFromProgress(
         progress: Int
     ): Float {
+
         return 0.5f +
                 (progress / 20f)
     }
@@ -192,6 +235,7 @@ class VoiceActivity : AppCompatActivity(),
     private fun pitchFromProgress(
         progress: Int
     ): Float {
+
         return 0.5f +
                 (progress / 20f)
     }
@@ -210,8 +254,13 @@ class VoiceActivity : AppCompatActivity(),
 
         speechRateValue.text =
             if (rate == 1.0f) {
-                getString(R.string.normal)
+
+                getString(
+                    R.string.normal
+                )
+
             } else {
+
                 String.format(
                     Locale.US,
                     "%.1fx",
@@ -221,8 +270,13 @@ class VoiceActivity : AppCompatActivity(),
 
         pitchValue.text =
             if (pitch == 1.0f) {
-                getString(R.string.normal)
+
+                getString(
+                    R.string.normal
+                )
+
             } else {
+
                 String.format(
                     Locale.US,
                     "%.1fx",
@@ -237,16 +291,12 @@ class VoiceActivity : AppCompatActivity(),
 
         if (status != TextToSpeech.SUCCESS) {
 
-            ttsReady = false
-
-            voiceStatus.text =
+            setTtsUnavailable(
                 getString(
                     R.string.voice_unavailable
-                )
-
-            voiceStatus.setTextColor(
-                getColor(
-                    R.color.danger
+                ),
+                getString(
+                    R.string.voice_setup_required
                 )
             )
 
@@ -264,32 +314,77 @@ class VoiceActivity : AppCompatActivity(),
             result != TextToSpeech.LANG_MISSING_DATA &&
                     result != TextToSpeech.LANG_NOT_SUPPORTED
 
-        if (ttsReady) {
+        if (!ttsReady) {
 
-            voiceStatus.text =
-                getString(
-                    R.string.voice_ready
-                )
-
-            voiceStatus.setTextColor(
-                getColor(
-                    R.color.success
-                )
-            )
-
-        } else {
-
-            voiceStatus.text =
+            setTtsUnavailable(
                 getString(
                     R.string.voice_unavailable
-                )
-
-            voiceStatus.setTextColor(
-                getColor(
-                    R.color.danger
+                ),
+                getString(
+                    R.string.nepali_tts_required
                 )
             )
+
+            return
         }
+
+        updateReadyStatus()
+    }
+
+    private fun updateReadyStatus() {
+
+        if (!ttsReady) {
+            return
+        }
+
+        val engine =
+            tts?.defaultEngine
+
+        voiceStatus.text =
+            getString(
+                R.string.voice_ready
+            )
+
+        voiceStatus.setTextColor(
+            getColor(
+                R.color.success
+            )
+        )
+
+        voiceDetails.text =
+            if (!engine.isNullOrBlank()) {
+
+                getString(
+                    R.string.voice_engine_ready,
+                    engine
+                )
+
+            } else {
+
+                getString(
+                    R.string.voice_ready_details
+                )
+            }
+    }
+
+    private fun setTtsUnavailable(
+        statusText: String,
+        detailText: String
+    ) {
+
+        ttsReady = false
+
+        voiceStatus.text =
+            statusText
+
+        voiceStatus.setTextColor(
+            getColor(
+                R.color.danger
+            )
+        )
+
+        voiceDetails.text =
+            detailText
     }
 
     private fun speakTest() {
@@ -310,8 +405,13 @@ class VoiceActivity : AppCompatActivity(),
                 1.0f
             )
 
-        tts?.setSpeechRate(rate)
-        tts?.setPitch(pitch)
+        tts?.setSpeechRate(
+            rate
+        )
+
+        tts?.setPitch(
+            pitch
+        )
 
         tts?.speak(
             "नमस्कार। यो Wallet Speaker को आवाज परीक्षण हो। तपाईंको खातामा पचास रुपैयाँ प्राप्त भएको छ।",
@@ -321,10 +421,42 @@ class VoiceActivity : AppCompatActivity(),
         )
     }
 
+    private fun openTtsSettings() {
+
+        try {
+
+            startActivity(
+                Intent(
+                    "com.android.settings.TTS_SETTINGS"
+                )
+            )
+
+        } catch (_: Exception) {
+
+            startActivity(
+                Intent(
+                    Settings.ACTION_SETTINGS
+                )
+            )
+        }
+    }
+
+    override fun onResume() {
+
+        super.onResume()
+
+        if (ttsReady) {
+            updateReadyStatus()
+        }
+    }
+
     override fun onDestroy() {
 
         tts?.stop()
         tts?.shutdown()
+
+        tts = null
+        ttsReady = false
 
         super.onDestroy()
     }

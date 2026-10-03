@@ -16,6 +16,8 @@
         android:paddingEnd="@dimen/screen_horizontal"
         android:paddingBottom="32dp">
 
+        <!-- Header -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,6 +74,27 @@
                 android:text="@string/checking_voice"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/body_text" />
+
+            <TextView
+                android:id="@+id/voiceDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/voice_checking_details"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/small_text" />
+
+            <Button
+                android:id="@+id/ttsSettingsButton"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_card"
+                android:text="@string/open_tts_settings"
+                android:textAllCaps="false"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/body_text"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -147,7 +170,7 @@
 
         </LinearLayout>
 
-        <!-- Test -->
+        <!-- Test voice -->
 
         <Button
             android:id="@+id/testVoiceButton"
@@ -160,6 +183,17 @@
             android:textColor="@color/surface"
             android:textSize="@dimen/body_text"
             android:textStyle="bold" />
+
+        <!-- Volume information -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/voice_volume_note"
+            android:textColor="@color/text_muted"
+            android:textSize="@dimen/small_text" />
 
     </LinearLayout>
 

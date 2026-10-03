@@ -68,7 +68,7 @@
     <string name="announcement_enabled">Announcement enabled</string>
     <string name="announcement_disabled">Announcement disabled</string>
     <string name="voice_status">Voice status</string>
-    <string name="checking_voice">Checking Nepali voice...</string>
+    <string name="checking_voice">Checking Nepali voice…</string>
     <string name="voice_ready">Nepali voice is ready</string>
     <string name="voice_unavailable">Nepali voice is unavailable</string>
     <string name="speech_rate">Speech rate</string>
@@ -88,7 +88,43 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="theme_saved">Theme updated</string>
+    <string name="voice_checking">Checking voice…</string>
+    <string name="voice_checking_details">Checking whether a Nepali text-to-speech voice is available.</string>
+    <string name="voice_setup_required">Nepali text-to-speech setup is required.</string>
+    <string name="nepali_tts_required">Install or enable a Nepali voice from Android Text-to-Speech settings.</string>
+    <string name="voice_engine_ready">Ready • Engine: %1$s</string>
+    <string name="voice_ready_details">Nepali text-to-speech is ready.</string>
+    <string name="open_tts_settings">Open TTS Settings</string>
+    <string name="voice_volume_note">Speech volume follows your phone’s media volume. Increase media volume for louder announcements.</string>
+    <string name="how_it_works">How Wallet Speaker Works</string>
+    <string name="how_it_works_title">Automatic wallet transaction announcements</string>
+    <string name="how_it_works_description">Wallet Speaker monitors supported eSewa and Khalti notifications and announces recognized transactions using Nepali text-to-speech.</string>
+    <string name="how_it_works_points">• Works while your phone screen is locked when Android delivers the notification to Wallet Speaker.`n• Announces supported received and sent transactions.`n• Ignores promotional and non-transaction wallet notifications.`n• Transactions can still be recorded when speech for that transaction type is turned off.`n• Voice rate and pitch can be configured from Settings → Voice.`n• Speech volume follows your phone media volume.`n• Notification access must remain enabled for transaction detection.</string>
+
+    <string name="about_wallet_speaker">About Wallet Speaker</string>
+    <string name="about_tagline">Smart wallet transaction voice announcer</string>
+    <string name="about_what_it_does">What Wallet Speaker Does</string>
+    <string name="about_what_it_does_text">Wallet Speaker automatically detects supported eSewa and Khalti wallet transaction notifications and announces recognized transactions using Nepali text-to-speech.</string>
+    <string name="about_supported_wallets">Supported Wallets</string>
+    <string name="about_supported_wallets_text">• eSewa\n• Khalti</string>
+    <string name="about_features">Features</string>
+    <string name="about_features_text">• Received and sent transaction detection\n• Nepali amount-to-words conversion\n• Sender information when available\n• Transaction history\n• Configurable speech rate and pitch\n• Separate announcement controls for wallet transaction types\n• Works with the phone screen locked when Android delivers the notification\n• Filters promotional and non-transaction wallet notifications</string>
+    <string name="about_voice">Voice &amp; Language</string>
+    <string name="about_voice_text">Wallet Speaker uses your device text-to-speech engine with Nepali language support. Speech rate and pitch can be adjusted from the Voice settings page. Announcement volume follows your phone media volume.</string>
+    <string name="about_privacy">Privacy</string>
+    <string name="about_privacy_text">Wallet Speaker uses wallet notification information on your device to identify transactions, maintain transaction history, and generate announcements. It does not require your eSewa or Khalti password.</string>
+    <string name="about_requirements">Important</string>
+    <string name="about_requirements_text">Wallet Speaker depends on Android Notification Listener access. Android or device-specific battery and background restrictions may affect whether notifications are delivered to the app.</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_developer">Developed by Sushil Timalsina</string>
+    <string name="about_footer">Made for simple and accessible wallet transaction announcements.</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="nepali">Nepali</string>
 </resources>
+
+
+
 
 
 
