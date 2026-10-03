@@ -252,7 +252,11 @@ class EsewaListenerService : NotificationListenerService(),
                 "debited",
                 "debit",
                 "payment successful",
-                "paid"
+                "paid",
+                "bank withdraw",
+                "withdraw",
+                "transfer",
+                "sent"
             ).any {
                 lower.contains(it)
             }
@@ -388,7 +392,11 @@ class EsewaListenerService : NotificationListenerService(),
             lower.contains("you have sent") ||
                     lower.contains("payment successful") ||
                     lower.contains("paid") ||
-                    lower.contains("debited")
+                    lower.contains("debited") ||
+                    lower.contains("bank withdraw") ||
+                    lower.contains("withdraw") ||
+                    lower.contains("transfer") ||
+                    lower.contains("sent")
 
         if (!isReceived && !isSent) {
             return TransactionResult.NotTransaction
