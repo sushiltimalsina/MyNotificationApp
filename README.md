@@ -14,4 +14,3 @@ An Android application designed to listen to incoming payment and transaction no
 - **Android SDK & NotificationListenerService**
 - **TextToSpeech Engine**
 - **Material Design UI Components**
-- **Google Gemini API Integration**
