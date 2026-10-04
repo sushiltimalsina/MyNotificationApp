@@ -92,7 +92,7 @@
                 android:background="@drawable/bg_card"
                 android:text="@string/open_tts_settings"
                 android:textAllCaps="false"
-                android:textColor="@color/primary"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/body_text"
                 android:textStyle="bold" />
 

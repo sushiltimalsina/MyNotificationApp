@@ -1,12 +1,14 @@
 package com.example.esewaspeaker
 
 import android.app.Notification
+import android.content.ComponentName
 import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.Locale
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 
 class EsewaListenerService : NotificationListenerService(),
@@ -20,303 +22,186 @@ class EsewaListenerService : NotificationListenerService(),
 
         const val PREFS = "wallet_settings"
 
-        private const val ESEWA_RECEIVED_ENABLED =
-            "esewa_received_enabled"
-
-        private const val ESEWA_SENT_ENABLED =
-            "esewa_sent_enabled"
-
-        private const val KHALTI_RECEIVED_ENABLED =
-            "khalti_received_enabled"
-
-        private const val KHALTI_SENT_ENABLED =
-            "khalti_sent_enabled"
-
-        private const val SILENT_OTHER_NOTIFICATIONS =
-            "silent_other_notifications"
+        private const val ESEWA_RECEIVED_ENABLED = "esewa_received_enabled"
+        private const val ESEWA_SENT_ENABLED = "esewa_sent_enabled"
+        private const val KHALTI_RECEIVED_ENABLED = "khalti_received_enabled"
+        private const val KHALTI_SENT_ENABLED = "khalti_sent_enabled"
+        private const val SILENT_OTHER_NOTIFICATIONS = "silent_other_notifications"
     }
 
     private var tts: TextToSpeech? = null
+
+    @Volatile
     private var ttsReady = false
+
+    @Volatile
     private var listenerConnected = false
 
-    private val executor =
-        Executors.newSingleThreadExecutor()
+    private val executor = Executors.newSingleThreadExecutor()
+
+    // Speech requested while TTS was not ready yet. Flushed when TTS becomes ready.
+    private val pendingSpeech = ConcurrentLinkedQueue<String>()
 
     private var lastKey = ""
 
     private val preferences by lazy {
-        getSharedPreferences(
-            PREFS,
-            MODE_PRIVATE
-        )
+        getSharedPreferences(PREFS, MODE_PRIVATE)
     }
 
     override fun onCreate() {
         super.onCreate()
-
-        Log.d(
-            TAG,
-            "Wallet Speaker service started"
-        )
-
-        tts = TextToSpeech(
-            this,
-            this
-        )
+        Log.d(TAG, "Wallet Speaker service started")
+        tts = TextToSpeech(this, this)
     }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
+            val result = tts?.setLanguage(Locale.forLanguageTag("ne-NP"))
 
-            val result =
-                tts?.setLanguage(
-                    Locale.forLanguageTag("ne-NP")
-                )
+            ttsReady = result != TextToSpeech.LANG_MISSING_DATA &&
+                    result != TextToSpeech.LANG_NOT_SUPPORTED
 
-            ttsReady =
-                result != TextToSpeech.LANG_MISSING_DATA &&
-                        result != TextToSpeech.LANG_NOT_SUPPORTED
+            Log.d(TAG, "TTS initialized. Ready: $ttsReady")
 
-            Log.d(
-                TAG,
-                "TTS initialized. Ready: $ttsReady"
-            )
-
+            if (ttsReady) {
+                flushPendingSpeech()
+            }
         } else {
-
-            Log.e(
-                TAG,
-                "TTS initialization failed"
-            )
+            Log.e(TAG, "TTS initialization failed")
         }
     }
 
     override fun onListenerConnected() {
         super.onListenerConnected()
-
         listenerConnected = true
-
-        Log.d(
-            TAG,
-            "Notification listener connected."
-        )
+        Log.d(TAG, "Notification listener connected.")
     }
 
     override fun onListenerDisconnected() {
         listenerConnected = false
-
-        Log.d(
-            TAG,
-            "Notification listener disconnected."
-        )
+        Log.d(TAG, "Notification listener disconnected. Requesting rebind.")
 
         super.onListenerDisconnected()
+
+        // Ask Android to reconnect us instead of staying dead until the
+        // user toggles notification access manually.
+        try {
+            requestRebind(ComponentName(this, EsewaListenerService::class.java))
+        } catch (e: Exception) {
+            Log.e(TAG, "Rebind request failed", e)
+        }
     }
 
-    override fun onNotificationPosted(
-        sbn: StatusBarNotification
-    ) {
+    override fun onNotificationPosted(sbn: StatusBarNotification) {
         val packageName = sbn.packageName
 
-        /*
-         * Only process notifications originating
-         * from eSewa or Khalti.
-         */
-        if (
-            packageName != ESEWA_PACKAGE &&
-            packageName != KHALTI_PACKAGE
-        ) {
+        // Only process notifications originating from eSewa or Khalti.
+        if (packageName != ESEWA_PACKAGE && packageName != KHALTI_PACKAGE) {
             return
         }
 
-        val extras: Bundle =
-            sbn.notification.extras
+        val extras: Bundle = sbn.notification.extras
 
-        val title =
-            extras.getCharSequence(
-                Notification.EXTRA_TITLE
-            )?.toString() ?: ""
+        val title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString() ?: ""
 
-        val text =
-            (
-                    extras.getCharSequence(
-                        Notification.EXTRA_BIG_TEXT
-                    )
-                        ?: extras.getCharSequence(
-                            Notification.EXTRA_TEXT
-                        )
-                    )?.toString() ?: ""
+        val text = (
+                extras.getCharSequence(Notification.EXTRA_BIG_TEXT)
+                    ?: extras.getCharSequence(Notification.EXTRA_TEXT)
+                )?.toString() ?: ""
 
-        val full =
-            "$title. $text".trim()
+        val full = "$title. $text".trim()
 
-        /*
-         * Do not log notification contents.
-         * Financial notifications may contain
-         * sensitive information.
-         */
+        // Do not log notification contents. Financial notifications are sensitive.
         if (full.isBlank()) {
             return
         }
 
-        /*
-         * Prevent processing the exact same
-         * notification repeatedly.
-         */
-        val key =
-            "$packageName|${sbn.key}|$full"
+        // Prevent processing the exact same notification repeatedly.
+        val key = "$packageName|${sbn.key}|$full"
 
         if (key == lastKey) {
-
-            Log.d(
-                TAG,
-                "Duplicate notification ignored"
-            )
-
+            Log.d(TAG, "Duplicate notification ignored")
             return
         }
 
         lastKey = key
 
         executor.execute {
-
-            val result =
-                if (packageName == ESEWA_PACKAGE) {
-                    buildEsewaTransaction(full)
-                } else {
-                    buildKhaltiTransaction(full)
-                }
+            val result = if (packageName == ESEWA_PACKAGE) {
+                buildEsewaTransaction(full)
+            } else {
+                buildKhaltiTransaction(full)
+            }
 
             when (result) {
-
                 is TransactionResult.Transaction -> {
-
-                    saveTransaction(
-                        result.record
-                    )
+                    saveTransaction(result.record)
 
                     if (result.enabled) {
-
-                        speak(
-                            result.sentence
-                        )
-
+                        speak(result.sentence)
                     } else {
-
-                        Log.d(
-                            TAG,
-                            "Transaction announcement disabled."
-                        )
+                        Log.d(TAG, "Transaction announcement disabled.")
                     }
                 }
 
                 TransactionResult.NotTransaction -> {
-
-                    handleOtherNotification(
-                        sbn
-                    )
+                    handleOtherNotification(sbn)
                 }
             }
         }
     }
 
-    private fun buildEsewaTransaction(
-        raw: String
-    ): TransactionResult {
+    private fun buildEsewaTransaction(raw: String): TransactionResult {
+        val lower = raw.lowercase()
+        val amount = extractAmount(raw) ?: return TransactionResult.NotTransaction
 
-        val lower =
-            raw.lowercase()
+        val isReceived = listOf(
+            "you have received",
+            "received npr",
+            "credited",
+            "credit"
+        ).any { lower.contains(it) }
 
-        val amount =
-            extractAmount(raw)
-
-        if (amount == null) {
-            return TransactionResult.NotTransaction
-        }
-
-        val isReceived =
-            listOf(
-                "you have received",
-                "received npr",
-                "credited",
-                "credit"
-            ).any {
-                lower.contains(it)
-            }
-
-        val isSent =
-            listOf(
-                "you have sent",
-                "sent npr",
-                "debited",
-                "debit",
-                "payment successful",
-                "paid",
-                "bank withdraw",
-                "withdraw",
-                "transfer",
-                "sent"
-            ).any {
-                lower.contains(it)
-            }
+        val isSent = listOf(
+            "you have sent",
+            "sent npr",
+            "debited",
+            "debit",
+            "payment successful",
+            "paid",
+            "bank withdraw",
+            "withdraw",
+            "transfer",
+            "sent"
+        ).any { lower.contains(it) }
 
         if (!isReceived && !isSent) {
             return TransactionResult.NotTransaction
         }
 
-        val ownerFromNotification =
-            Regex(
-                """(?i)\bDear\s+([^,\n]+)"""
-            )
-                .find(raw)
-                ?.groupValues
-                ?.getOrNull(1)
-                ?.trim()
+        val ownerFromNotification = Regex("""(?i)\bDear\s+([^,\n]+)""")
+            .find(raw)
+            ?.groupValues
+            ?.getOrNull(1)
+            ?.trim()
 
-        val savedOwner =
-            preferences.getString(
-                "esewa_owner_name",
-                ""
-            )?.trim()
+        val savedOwner = preferences.getString("esewa_owner_name", "")?.trim()
 
-        val owner =
-            ownerFromNotification
-                ?.takeIf {
-                    it.isNotBlank()
-                }
-                ?: savedOwner
-                    ?.takeIf {
-                        it.isNotBlank()
-                    }
+        val owner = ownerFromNotification?.takeIf { it.isNotBlank() }
+            ?: savedOwner?.takeIf { it.isNotBlank() }
 
-        val spokenAmount =
-            NepaliNumberConverter.convert(
-                amount
-            )
+        val spokenAmount = NepaliNumberConverter.convert(amount)
 
         if (isReceived) {
+            val enabled = preferences.getBoolean(ESEWA_RECEIVED_ENABLED, true)
 
-            val enabled =
-                preferences.getBoolean(
-                    ESEWA_RECEIVED_ENABLED,
-                    true
-                )
-
-            val sentence =
-                if (owner != null) {
-
-                    "$owner जी, तपाईंको ईसेवा खातामा " +
-                            "$spokenAmount रुपैयाँ प्राप्त भएको छ।"
-
-                } else {
-
-                    "तपाईंको ईसेवा खातामा " +
-                            "$spokenAmount रुपैयाँ प्राप्त भएको छ।"
-                }
+            val sentence = if (owner != null) {
+                "$owner जी, तपाईंको ईसेवा खातामा $spokenAmount रुपैयाँ प्राप्त भएको छ।"
+            } else {
+                "तपाईंको ईसेवा खातामा $spokenAmount रुपैयाँ प्राप्त भएको छ।"
+            }
 
             return TransactionResult.Transaction(
-
                 record = TransactionRecord(
                     wallet = "eSewa",
                     type = "received",
@@ -324,35 +209,21 @@ class EsewaListenerService : NotificationListenerService(),
                     person = null,
                     timestamp = System.currentTimeMillis()
                 ),
-
                 sentence = sentence,
-
                 enabled = enabled
             )
         }
 
         if (isSent) {
+            val enabled = preferences.getBoolean(ESEWA_SENT_ENABLED, true)
 
-            val enabled =
-                preferences.getBoolean(
-                    ESEWA_SENT_ENABLED,
-                    true
-                )
-
-            val sentence =
-                if (owner != null) {
-
-                    "$owner जी, तपाईंको ईसेवा खाताबाट " +
-                            "$spokenAmount रुपैयाँ भुक्तानी भएको छ।"
-
-                } else {
-
-                    "तपाईंको ईसेवा खाताबाट " +
-                            "$spokenAmount रुपैयाँ भुक्तानी भएको छ।"
-                }
+            val sentence = if (owner != null) {
+                "$owner जी, तपाईंको ईसेवा खाताबाट $spokenAmount रुपैयाँ भुक्तानी भएको छ।"
+            } else {
+                "तपाईंको ईसेवा खाताबाट $spokenAmount रुपैयाँ भुक्तानी भएको छ।"
+            }
 
             return TransactionResult.Transaction(
-
                 record = TransactionRecord(
                     wallet = "eSewa",
                     type = "sent",
@@ -360,9 +231,7 @@ class EsewaListenerService : NotificationListenerService(),
                     person = null,
                     timestamp = System.currentTimeMillis()
                 ),
-
                 sentence = sentence,
-
                 enabled = enabled
             )
         }
@@ -370,98 +239,56 @@ class EsewaListenerService : NotificationListenerService(),
         return TransactionResult.NotTransaction
     }
 
-    private fun buildKhaltiTransaction(
-        raw: String
-    ): TransactionResult {
+    private fun buildKhaltiTransaction(raw: String): TransactionResult {
+        val lower = raw.lowercase()
+        val amount = extractAmount(raw) ?: return TransactionResult.NotTransaction
 
-        val lower =
-            raw.lowercase()
+        val isReceived = lower.contains("fund received") ||
+                lower.contains("you have received")
 
-        val amount =
-            extractAmount(raw)
-
-        if (amount == null) {
-            return TransactionResult.NotTransaction
-        }
-
-        val isReceived =
-            lower.contains("fund received") ||
-                    lower.contains("you have received")
-
-        val isSent =
-            lower.contains("you have sent") ||
-                    lower.contains("payment successful") ||
-                    lower.contains("paid") ||
-                    lower.contains("debited") ||
-                    lower.contains("bank withdraw") ||
-                    lower.contains("withdraw") ||
-                    lower.contains("transfer") ||
-                    lower.contains("sent")
+        val isSent = lower.contains("you have sent") ||
+                lower.contains("payment successful") ||
+                lower.contains("paid") ||
+                lower.contains("debited") ||
+                lower.contains("bank withdraw") ||
+                lower.contains("withdraw") ||
+                lower.contains("transfer") ||
+                lower.contains("sent")
 
         if (!isReceived && !isSent) {
             return TransactionResult.NotTransaction
         }
 
-        val owner =
-            preferences.getString(
-                "khalti_owner_name",
-                ""
-            )?.trim()
+        val owner = preferences.getString("khalti_owner_name", "")?.trim()
 
         if (isReceived) {
+            val enabled = preferences.getBoolean(KHALTI_RECEIVED_ENABLED, true)
 
-            val enabled =
-                preferences.getBoolean(
-                    KHALTI_RECEIVED_ENABLED,
-                    true
-                )
+            val sender = Regex(
+                """(?i)you\s+have\s+received\s+(?:rs\.?|npr\.?)\s*[\d,]+(?:\.\d+)?\s+from\s+(.+?)(?:\.|$)"""
+            )
+                .find(raw)
+                ?.groupValues
+                ?.getOrNull(1)
+                ?.trim()
 
-            val sender =
-                Regex(
-                    """(?i)you\s+have\s+received\s+(?:rs\.?|npr\.?)\s*[\d,]+(?:\.\d+)?\s+from\s+(.+?)(?:\.|$)"""
-                )
-                    .find(raw)
-                    ?.groupValues
-                    ?.getOrNull(1)
-                    ?.trim()
+            val spokenAmount = NepaliNumberConverter.convert(amount)
 
-            val spokenAmount =
-                NepaliNumberConverter.convert(
-                    amount
-                )
+            val sentence = when {
+                !owner.isNullOrBlank() && !sender.isNullOrBlank() ->
+                    "$owner जी, $sender बाट तपाईंको खल्ती खातामा $spokenAmount रुपैयाँ प्राप्त भएको छ।"
 
-            val sentence =
-                when {
+                !owner.isNullOrBlank() ->
+                    "$owner जी, तपाईंको खल्ती खातामा $spokenAmount रुपैयाँ प्राप्त भएको छ।"
 
-                    !owner.isNullOrBlank() &&
-                            !sender.isNullOrBlank() -> {
+                !sender.isNullOrBlank() ->
+                    "$sender बाट तपाईंको खल्ती खातामा $spokenAmount रुपैयाँ प्राप्त भएको छ।"
 
-                        "$owner जी, $sender बाट " +
-                                "तपाईंको खल्ती खातामा " +
-                                "$spokenAmount रुपैयाँ प्राप्त भएको छ।"
-                    }
-
-                    !owner.isNullOrBlank() -> {
-
-                        "$owner जी, तपाईंको खल्ती खातामा " +
-                                "$spokenAmount रुपैयाँ प्राप्त भएको छ।"
-                    }
-
-                    !sender.isNullOrBlank() -> {
-
-                        "$sender बाट तपाईंको खल्ती खातामा " +
-                                "$spokenAmount रुपैयाँ प्राप्त भएको छ।"
-                    }
-
-                    else -> {
-
-                        "तपाईंको खल्ती खातामा " +
-                                "$spokenAmount रुपैयाँ प्राप्त भएको छ।"
-                    }
-                }
+                else ->
+                    "तपाईंको खल्ती खातामा $spokenAmount रुपैयाँ प्राप्त भएको छ।"
+            }
 
             return TransactionResult.Transaction(
-
                 record = TransactionRecord(
                     wallet = "Khalti",
                     type = "received",
@@ -469,40 +296,23 @@ class EsewaListenerService : NotificationListenerService(),
                     person = sender,
                     timestamp = System.currentTimeMillis()
                 ),
-
                 sentence = sentence,
-
                 enabled = enabled
             )
         }
 
         if (isSent) {
+            val enabled = preferences.getBoolean(KHALTI_SENT_ENABLED, true)
 
-            val enabled =
-                preferences.getBoolean(
-                    KHALTI_SENT_ENABLED,
-                    true
-                )
+            val spokenAmount = NepaliNumberConverter.convert(amount)
 
-            val spokenAmount =
-                NepaliNumberConverter.convert(
-                    amount
-                )
-
-            val sentence =
-                if (!owner.isNullOrBlank()) {
-
-                    "$owner जी, तपाईंको खल्ती खाताबाट " +
-                            "$spokenAmount रुपैयाँ भुक्तानी भएको छ।"
-
-                } else {
-
-                    "तपाईंको खल्ती खाताबाट " +
-                            "$spokenAmount रुपैयाँ भुक्तानी भएको छ।"
-                }
+            val sentence = if (!owner.isNullOrBlank()) {
+                "$owner जी, तपाईंको खल्ती खाताबाट $spokenAmount रुपैयाँ भुक्तानी भएको छ।"
+            } else {
+                "तपाईंको खल्ती खाताबाट $spokenAmount रुपैयाँ भुक्तानी भएको छ।"
+            }
 
             return TransactionResult.Transaction(
-
                 record = TransactionRecord(
                     wallet = "Khalti",
                     type = "sent",
@@ -510,9 +320,7 @@ class EsewaListenerService : NotificationListenerService(),
                     person = null,
                     timestamp = System.currentTimeMillis()
                 ),
-
                 sentence = sentence,
-
                 enabled = enabled
             )
         }
@@ -520,117 +328,59 @@ class EsewaListenerService : NotificationListenerService(),
         return TransactionResult.NotTransaction
     }
 
-    private fun saveTransaction(
-        record: TransactionRecord
-    ) {
+    private fun saveTransaction(record: TransactionRecord) {
+        TransactionHistory.add(this, record)
 
-        TransactionHistory.add(
-            this,
-            record
-        )
-
-        /*
-         * Do not log the actual transaction.
-         */
-        Log.d(
-            TAG,
-            "Transaction saved locally."
-        )
+        // Do not log the actual transaction.
+        Log.d(TAG, "Transaction saved locally.")
     }
 
-    private fun handleOtherNotification(
-        sbn: StatusBarNotification
-    ) {
-
-        val silent =
-            preferences.getBoolean(
-                SILENT_OTHER_NOTIFICATIONS,
-                false
-            )
+    private fun handleOtherNotification(sbn: StatusBarNotification) {
+        val silent = preferences.getBoolean(SILENT_OTHER_NOTIFICATIONS, false)
 
         if (!silent) {
-
-            Log.d(
-                TAG,
-                "Non-transaction wallet notification ignored."
-            )
-
+            Log.d(TAG, "Non-transaction wallet notification ignored.")
             return
         }
 
         try {
-
-            cancelNotification(
-                sbn.key
-            )
-
-            Log.d(
-                TAG,
-                "Non-transaction wallet notification cancelled."
-            )
-
+            cancelNotification(sbn.key)
+            Log.d(TAG, "Non-transaction wallet notification cancelled.")
         } catch (e: Exception) {
-
-            Log.e(
-                TAG,
-                "Could not cancel notification",
-                e
-            )
+            Log.e(TAG, "Could not cancel notification", e)
         }
     }
 
-    private fun extractAmount(
-        text: String
-    ): String? {
-
-        val withCurrency =
-            Regex(
-                """(?:rs\.?|npr\.?|रु\.?)\s*([\d,]+(?:\.\d+)?)""",
-                RegexOption.IGNORE_CASE
-            )
+    private fun extractAmount(text: String): String? {
+        val withCurrency = Regex(
+            """(?:rs\.?|npr\.?|रु\.?)\s*([\d,]+(?:\.\d+)?)""",
+            RegexOption.IGNORE_CASE
+        )
 
         withCurrency.find(text)?.let {
-
-            return it.groupValues[1]
-                .replace(",", "")
+            return it.groupValues[1].replace(",", "")
         }
 
         return null
     }
 
-    private fun speak(
-        sentence: String
-    ) {
-
+    private fun speak(sentence: String) {
         if (!ttsReady) {
-
-            Log.e(
-                TAG,
-                "TTS is not ready."
-            )
-
+            // Keep it so it is announced as soon as TTS is ready.
+            Log.w(TAG, "TTS not ready. Announcement queued.")
+            pendingSpeech.add(sentence)
             return
         }
 
-        val rate =
-            preferences.getFloat(
-                "speech_rate",
-                1.0f
-            )
+        speakNow(sentence)
+    }
 
-        val pitch =
-            preferences.getFloat(
-                "speech_pitch",
-                1.0f
-            )
+    private fun speakNow(sentence: String) {
+        val rate = preferences.getFloat("speech_rate", 1.0f)
+        val pitch = preferences.getFloat("speech_pitch", 1.0f)
 
-        tts?.setSpeechRate(
-            rate
-        )
-
-        tts?.setPitch(
-            pitch
-        )
+        tts?.setSpeechRate(rate)
+        tts?.setPitch(pitch)
 
         tts?.speak(
             sentence,
@@ -640,12 +390,15 @@ class EsewaListenerService : NotificationListenerService(),
         )
     }
 
-    override fun onDestroy() {
+    private fun flushPendingSpeech() {
+        while (true) {
+            val next = pendingSpeech.poll() ?: break
+            speakNow(next)
+        }
+    }
 
-        Log.d(
-            TAG,
-            "Wallet Speaker service destroyed"
-        )
+    override fun onDestroy() {
+        Log.d(TAG, "Wallet Speaker service destroyed")
 
         listenerConnected = false
 
@@ -658,14 +411,12 @@ class EsewaListenerService : NotificationListenerService(),
     }
 
     private sealed class TransactionResult {
-
         data class Transaction(
             val record: TransactionRecord,
             val sentence: String,
             val enabled: Boolean
         ) : TransactionResult()
 
-        data object NotTransaction :
-            TransactionResult()
+        data object NotTransaction : TransactionResult()
     }
 }
